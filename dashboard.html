@@ -29,6 +29,19 @@
             background: linear-gradient(135deg, #4e54c8, #8f94fb);
         }
     </style>
+
+    <!-- VALIDACIÓN DE LOGIN -->
+    <script>
+        // Bloquear acceso sin login
+        if (!localStorage.getItem("usuario")) {
+            window.location.href = "login.html";
+        }
+
+        function cerrarSesion() {
+            localStorage.clear();
+            window.location.href = "login.html";
+        }
+    </script>
 </head>
 
 <body>
@@ -36,22 +49,16 @@
     <!-- NAVBAR -->
     <nav class="navbar navbar-dark header-gradient p-3">
         <div class="container-fluid">
-            <a class="navbar-brand fw-bold fs-4" href="#">
-                <i class="fa-solid fa-layer-group me-2"></i>Sistema Web
+            <a class="navbar-brand fw-bold fs-4">
+                <i class="fa-solid fa-layer-group me-2"></i>Sistema SEGE-C
             </a>
 
             <div class="d-flex text-white">
-                <span class="me-3">
-                    <i class="fa-solid fa-user"></i> 
-                    <strong>Usuario:</strong> Admin 
-                    <!-- Si lo quieres dinámico en PHP:
-                    <?= $_SESSION["usuario_nombre"]; ?> (<?= $_SESSION["usuario_rol"]; ?>)
-                    -->
-                </span>
+                <span class="me-3" id="userInfo"></span>
 
-                <a href="backend/logout.php" class="btn btn-light btn-sm">
+                <button onclick="cerrarSesion()" class="btn btn-light btn-sm">
                     <i class="fa-solid fa-right-from-bracket"></i> Salir
-                </a>
+                </button>
             </div>
         </div>
     </nav>
@@ -63,41 +70,46 @@
 
         <div class="row g-4">
 
-            <!-- Usuarios -->
-            <div class="col-md-4">
-                <a href="modules/usuarios.html" class="text-decoration-none">
+            <!-- REGISTRO DE PACIENTES (SOLO ENFERMERÍA) -->
+            <div class="col-md-4" id="opcPacientes">
+                <a href="modules/pacientes/registrar.html" class="text-decoration-none">
                     <div class="card card-hover shadow-sm p-4 text-center">
-
-                        <i class="fa-solid fa-users fa-3x text-primary mb-3"></i>
-
-                        <h4 class="fw-bold text-dark">Usuarios</h4>
-                        <p class="text-muted">Gestión de usuarios del sistema</p>
+                        <i class="fa-solid fa-user-plus fa-3x text-primary mb-3"></i>
+                        <h4 class="fw-bold text-dark">Registrar Pacientes</h4>
+                        <p class="text-muted">Ingreso de nuevos pacientes</p>
                     </div>
                 </a>
             </div>
 
-            <!-- Productos -->
+            <!-- REGISTRAR CITA -->
             <div class="col-md-4">
-                <a href="modules/productos.html" class="text-decoration-none">
+                <a href="modules/citas/registrar.html" class="text-decoration-none">
                     <div class="card card-hover shadow-sm p-4 text-center">
-
-                        <i class="fa-solid fa-box-open fa-3x text-success mb-3"></i>
-
-                        <h4 class="fw-bold text-dark">Productos</h4>
-                        <p class="text-muted">Administración de inventario</p>
+                        <i class="fa-solid fa-calendar-plus fa-3x text-success mb-3"></i>
+                        <h4 class="fw-bold text-dark">Registrar Cita</h4>
+                        <p class="text-muted">Programar citas médicas</p>
                     </div>
                 </a>
             </div>
 
-            <!-- Reportes -->
-            <div class="col-md-4">
-                <a href="modules/reportes.html" class="text-decoration-none">
+            <!-- CONSULTAR CITAS -->
+            <div class="col-md-4" id="opcConsultas">
+                <a href="modules/citas/consultar.html" class="text-decoration-none">
                     <div class="card card-hover shadow-sm p-4 text-center">
+                        <i class="fa-solid fa-search fa-3x text-danger mb-3"></i>
+                        <h4 class="fw-bold text-dark">Consultar Citas</h4>
+                        <p class="text-muted">Búsqueda por fecha o cédula</p>
+                    </div>
+                </a>
+            </div>
 
-                        <i class="fa-solid fa-chart-line fa-3x text-danger mb-3"></i>
-
-                        <h4 class="fw-bold text-dark">Reportes</h4>
-                        <p class="text-muted">Gráficos e informes del sistema</p>
+            <!-- CONTROL DE GLUCOSA -->
+            <div class="col-md-4">
+                <a href="modules/glucosa/control.html" class="text-decoration-none">
+                    <div class="card card-hover shadow-sm p-4 text-center">
+                        <i class="fa-solid fa-heart-pulse fa-3x text-warning mb-3"></i>
+                        <h4 class="fw-bold text-dark">Control de Glucosa</h4>
+                        <p class="text-muted">Registro de lecturas</p>
                     </div>
                 </a>
             </div>
@@ -108,6 +120,22 @@
     <!-- Bootstrap JS -->
     <script 
         src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+    </script>
+
+    <!-- LOGICA DE ROL Y USUARIO -->
+    <script>
+        // Mostrar usuario
+        const usuario = localStorage.getItem("usuario");
+        const rol     = localStorage.getItem("rol");
+
+        document.getElementById("userInfo").innerHTML =
+            `<i class="fa-solid fa-user"></i> <strong>${usuario}</strong> (${rol})`;
+
+        // Si es paciente → ocultar módulos restringidos
+        if (rol === "paciente") {
+            document.getElementById("opcPacientes").style.display = "none";
+            document.getElementById("opcConsultas").style.display = "none";
+        }
     </script>
 
 </body>
