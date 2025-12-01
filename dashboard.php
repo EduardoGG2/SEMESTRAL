@@ -64,7 +64,7 @@ if (!isset($_SESSION["usuario_id"])) {
         <div class="row g-4">
 
             <div class="col-md-4">
-                <a href="modules/pacientes/registrar.html" class="text-decoration-none">
+                <a href="modules/pacientes/registrar.php" class="text-decoration-none">
                     <div class="card card-hover shadow-sm p-4 text-center">
                         <i class="fa-solid fa-user-plus fa-3x text-primary mb-3"></i>
                         <h4 class="fw-bold">Registrar Pacientes</h4>
@@ -74,7 +74,7 @@ if (!isset($_SESSION["usuario_id"])) {
             </div>
 
             <div class="col-md-4">
-                <a href="modules/citas/registrar.html" class="text-decoration-none">
+                <a href="modules/citas/registrar.php" class="text-decoration-none">
                     <div class="card card-hover shadow-sm p-4 text-center">
                         <i class="fa-solid fa-calendar-plus fa-3x text-success mb-3"></i>
                         <h4 class="fw-bold">Registrar Cita</h4>
@@ -84,7 +84,7 @@ if (!isset($_SESSION["usuario_id"])) {
             </div>
 
             <div class="col-md-4">
-                <a href="modules/citas/consultar.html" class="text-decoration-none">
+                <a href="modules/citas/consultar.php" class="text-decoration-none">
                     <div class="card card-hover shadow-sm p-4 text-center">
                         <i class="fa-solid fa-search fa-3x text-danger mb-3"></i>
                         <h4 class="fw-bold">Consultar Citas</h4>
@@ -94,7 +94,7 @@ if (!isset($_SESSION["usuario_id"])) {
             </div>
 
             <div class="col-md-4">
-                <a href="modules/glucosa/control.html" class="text-decoration-none">
+                <a href="modules/glucosa/control.php" class="text-decoration-none">
                     <div class="card card-hover shadow-sm p-4 text-center">
                         <i class="fa-solid fa-heart-pulse fa-3x text-warning mb-3"></i>
                         <h4 class="fw-bold">Control de Glucosa</h4>
