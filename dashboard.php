@@ -1,7 +1,15 @@
 <?php
+/**
+ * SEGE-C – Panel Principal
+ * Control de acceso mediante sesión.
+ * Este archivo genera la vista principal según el rol del usuario autenticado.
+ * Autor: Eduardo Jurado
+ * Última actualización: 08/12/2025
+ */
+
 session_start();
 
-// Redirigir si NO hay sesión
+// Verificación de autenticación. Si no existe sesión, se redirige al inicio de sesión.
 if (!isset($_SESSION["usuario_id"])) {
     header("Location: login.html");
     exit;
@@ -16,6 +24,7 @@ $rol    = $_SESSION["usuario_rol"];
     <meta charset="UTF-8">
     <title>Panel de Control - SEGE-C</title>
 
+    <!-- Frameworks CSS y librerías base del sistema -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -26,6 +35,7 @@ $rol    = $_SESSION["usuario_rol"];
             background: #f0f2f7;
         }
 
+        /* Barra lateral de navegación fija */
         .sidebar {
             position: fixed;
             top: 0;
@@ -44,6 +54,7 @@ $rol    = $_SESSION["usuario_rol"];
             font-weight: bold;
         }
 
+        /* Estilos de los enlaces del menú lateral */
         .sidebar a {
             display: block;
             padding: 12px 20px;
@@ -59,11 +70,13 @@ $rol    = $_SESSION["usuario_rol"];
             color: white;
         }
 
+        /* Contenedor principal del contenido */
         .content {
             margin-left: 260px;
             padding: 30px;
         }
 
+        /* Tarjetas de opciones del panel */
         .card-option {
             background: white;
             border-radius: 16px;
@@ -78,9 +91,23 @@ $rol    = $_SESSION["usuario_rol"];
             box-shadow: 0px 8px 20px rgba(0,0,0,0.15);
         }
 
-        .card-option i {
-            font-size: 42px;
-            margin-bottom: 10px;
+        /* Reloj redondeado ubicado en la parte inferior del sidebar */
+        .clock-container {
+            position: absolute;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 180px;
+            padding: 12px;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.18);
+            backdrop-filter: blur(6px);
+            border-radius: 50px;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.25);
+            border: 1px solid rgba(255,255,255,0.27);
         }
 
         footer {
@@ -93,11 +120,13 @@ $rol    = $_SESSION["usuario_rol"];
 
 <body>
 
-    <!-- SIDEBAR -->
+    <!-- Sidebar del sistema -->
     <div class="sidebar">
 
+        <!-- Identidad del sistema -->
         <h3><i class="fa-solid fa-hospital-user"></i> SEGE-C</h3>
 
+        <!-- Información del usuario autenticado -->
         <p class="text-center">
             <i class="fa-solid fa-user"></i> 
             <strong><?= $nombre ?></strong><br>
@@ -106,14 +135,14 @@ $rol    = $_SESSION["usuario_rol"];
 
         <hr class="mx-3">
 
-        <!-- Administrar usuarios (SOLO SI NO ES PACIENTE) -->
+        <!-- Módulo visible solo para roles administrativos -->
         <?php if ($rol !== 'paciente'): ?>
             <a href="modules/usuarios/administrar.php">
                 <i class="fa-solid fa-users-gear"></i> Administrar Usuarios
             </a>
         <?php endif; ?>
 
-        <!-- OPCIONES PARA TODOS -->
+        <!-- Opciones generales visibles para todos los usuarios -->
         <a href="modules/citas/registrar.php">
             <i class="fa-solid fa-calendar-plus"></i> Registrar Cita
         </a>
@@ -122,7 +151,7 @@ $rol    = $_SESSION["usuario_rol"];
             <i class="fa-solid fa-heart-pulse"></i> Control de Glucosa
         </a>
 
-        <!-- OPCIONES SOLO ADMIN O DOCTOR -->
+        <!-- Funcionalidades exclusivas para personal médico/administrativo -->
         <?php if ($rol !== 'paciente'): ?>
 
             <a href="modules/pacientes/registrar.php">
@@ -137,80 +166,104 @@ $rol    = $_SESSION["usuario_rol"];
 
         <hr class="mx-3">
 
+        <!-- Cierre de sesión -->
         <a href="backend/logout.php" onclick="cerrar(); return false;">
             <i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión
         </a>
+
+        <!-- Reloj redondeado (parte inferior del sidebar) -->
+        <div class="clock-container">
+            <span id="clock">00:00:00</span>
+        </div>
+
     </div>
 
-    <!-- CONTENIDO -->
-    <div class="content">
+    <!-- CONTENIDO PRINCIPAL -->
+ <div class="content">
 
-        <h2 class="fw-bold">Panel Principal</h2>
-        <p class="text-muted">Bienvenido al sistema clínico SEGE-C</p>
+    <h2 class="fw-bold mb-1">Panel Principal</h2>
+    <p class="text-muted mb-4">Bienvenido al sistema clínico SEGE-C</p>
 
-        <div class="row g-4 mt-3">
+    <div class="row g-4">
 
-            <!-- TARJETA Administrar Usuarios SOLO ADMIN/DOCTOR -->
-            <?php if ($rol !== 'paciente'): ?>
-            <div class="col-md-4">
-                <a href="modules/usuarios/administrar.php" class="text-decoration-none text-dark">
-                    <div class="card-option">
-                        <i class="fa-solid fa-users-gear text-info"></i>
-                        <h4 class="fw-bold">Administrar Usuarios</h4>
-                        <p>Gestionar usuarios del sistema</p>
-                    </div>
-                </a>
-            </div>
-            <?php endif; ?>
+        <!-- Administrar usuarios (solo roles válidos) -->
+        <?php if ($rol !== 'paciente'): ?>
+        <div class="col-md-4">
+            <a href="modules/usuarios/administrar.php" class="text-decoration-none text-dark">
+                <div class="card-option p-4 text-center">
 
-            <!-- Registrar Cita (TODOS) -->
-            <div class="col-md-4">
-                <a href="modules/citas/registrar.php" class="text-decoration-none text-dark">
-                    <div class="card-option">
-                        <i class="fa-solid fa-calendar-plus text-success"></i>
-                        <h4 class="fw-bold">Registrar Cita</h4>
-                        <p>Programar atención médica</p>
-                    </div>
-                </a>
-            </div>
+                    <i class="fa-solid fa-users-gear" 
+                       style="font-size:48px; color:#00c4ff;"></i>
 
-            <!-- Control de Glucosa (TODOS) -->
-            <div class="col-md-4">
-                <a href="modules/glucosa/control.php" class="text-decoration-none text-dark">
-                    <div class="card-option">
-                        <i class="fa-solid fa-heart-pulse text-danger"></i>
-                        <h4 class="fw-bold">Control de Glucosa</h4>
-                        <p>Registrar mediciones</p>
-                    </div>
-                </a>
-            </div>
-
-            <!-- SOLO ADMIN/DOCTOR -->
-            <?php if ($rol !== 'paciente'): ?>
-
-                <div class="col-md-4">
-                    <a href="modules/pacientes/registrar.php" class="text-decoration-none text-dark">
-                        <div class="card-option">
-                            <i class="fa-solid fa-user-plus text-primary"></i>
-                            <h4 class="fw-bold">Registrar Pacientes</h4>
-                            <p>Agregar nuevos registros</p>
-                        </div>
-                    </a>
+                    <h4 class="fw-bold mt-3">Administrar Usuarios</h4>
+                    <p class="text-muted">Gestión completa del personal</p>
                 </div>
-
-                <div class="col-md-4">
-                    <a href="modules/citas/consultar.php" class="text-decoration-none text-dark">
-                        <div class="card-option">
-                            <i class="fa-solid fa-search text-warning"></i>
-                            <h4 class="fw-bold">Consultar Citas</h4>
-                            <p>Búsqueda avanzada</p>
-                        </div>
-                    </a>
-                </div>
-
-            <?php endif; ?>
-
+            </a>
         </div>
+        <?php endif; ?>
+
+        <!-- Registrar cita -->
+        <div class="col-md-4">
+            <a href="modules/citas/registrar.php" class="text-decoration-none text-dark">
+                <div class="card-option p-4 text-center">
+
+                    <i class="fa-solid fa-calendar-plus"
+                       style="font-size:48px; color:#1dd15d;"></i>
+
+                    <h4 class="fw-bold mt-3">Registrar Cita</h4>
+                    <p class="text-muted">Programación de citas clínicas</p>
+                </div>
+            </a>
+        </div>
+
+        <!-- Control de glucosa -->
+        <div class="col-md-4">
+            <a href="modules/glucosa/control.php" class="text-decoration-none text-dark">
+                <div class="card-option p-4 text-center">
+
+                    <i class="fa-solid fa-heart-pulse"
+                       style="font-size:48px; color:#ff4d4d;"></i>
+
+                    <h4 class="fw-bold mt-3">Control de Glucosa</h4>
+                    <p class="text-muted">Registrar mediciones del paciente</p>
+                </div>
+            </a>
+        </div>
+
+        
+        <?php if ($rol !== 'paciente'): ?>
+
+        <div class="col-md-4">
+            <a href="modules/pacientes/registrar.php" class="text-decoration-none text-dark">
+                <div class="card-option p-4 text-center">
+
+                    <i class="fa-solid fa-user-plus"
+                       style="font-size:48px; color:#007bff;"></i>
+
+                    <h4 class="fw-bold mt-3">Registrar Pacientes</h4>
+                    <p class="text-muted">Añadir nuevos registros clínicos</p>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-4">
+            <a href="modules/citas/consultar.php" class="text-decoration-none text-dark">
+                <div class="card-option p-4 text-center">
+
+                    <i class="fa-solid fa-search"
+                       style="font-size:48px; color:#f0a500;"></i>
+
+                    <h4 class="fw-bold mt-3">Consultar Citas</h4>
+                    <p class="text-muted">Herramienta de búsqueda avanzada</p>
+                </div>
+            </a>
+        </div>
+
+        <?php endif; ?>
+
+    </div>
+</div>
+
 
         <footer class="mt-5">
             SEGE-C — Sistema de Gestión Clínica<br>
@@ -219,7 +272,11 @@ $rol    = $_SESSION["usuario_rol"];
 
     </div>
 
+    <!-- Scripts de funcionalidad general -->
     <script>
+        /**
+         * Alerta de confirmación para cierre de sesión.
+         */
         function cerrar() {
             Swal.fire({
                 title: "¿Cerrar sesión?",
@@ -234,6 +291,24 @@ $rol    = $_SESSION["usuario_rol"];
                 }
             });
         }
+
+        /**
+         * Reloj digital del sistema colocado en el sidebar.
+         * Actualiza cada segundo.
+         */
+        function actualizarReloj() {
+            const clock = document.getElementById("clock");
+            const now = new Date();
+
+            const h = String(now.getHours()).padStart(2, "0");
+            const m = String(now.getMinutes()).padStart(2, "0");
+            const s = String(now.getSeconds()).padStart(2, "0");
+
+            clock.textContent = `${h}:${m}:${s}`;
+        }
+
+        setInterval(actualizarReloj, 1000);
+        actualizarReloj();
     </script>
 
 </body>

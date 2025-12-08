@@ -1,0 +1,15 @@
+{
+    "appName": "SEGE-C",
+    "version": "1.0.0",
+    "timezone": "America/Panama",
+    "sessionLifetime": 3600,
+    "logErrors": true,
+    "ui": {
+        "theme": "light",
+        "brandColor": "#0d6efd"
+    },
+    "security": {
+        "csrf": true,
+        "rateLimit": 100
+    }
+}
