@@ -155,7 +155,6 @@ function enviarCorreo() {
 </head>
 
 <body>
-
 <div class="container">
 
     <div class="header-box">

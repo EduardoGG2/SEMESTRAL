@@ -50,12 +50,3 @@ CREATE TABLE glucosa (
     fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-ALTER TABLE citas
-ADD CONSTRAINT fk_citas_paciente
-FOREIGN KEY (cedula) REFERENCES pacientes(cedula)
-ON DELETE CASCADE ON UPDATE CASCADE;
-
-ALTER TABLE glucosa
-ADD CONSTRAINT fk_glucosa_paciente
-FOREIGN KEY (cedula) REFERENCES pacientes(cedula)
-ON DELETE CASCADE ON UPDATE CASCADE;

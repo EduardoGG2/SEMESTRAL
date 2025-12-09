@@ -1,20 +1,17 @@
 <?php
 session_start();
-require "../backend/config.php"; 
+require "../backend/config.php";
+
+$secreto = "Odio PHP viva C#";
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
-    // Frase secreta para el hash
-    $secreto = "Odio PHP viva C#";
-
-    // Datos enviados del formulario
     $usuarioIngresado  = trim($_POST["usuario"]);
     $passwordIngresado = trim($_POST["password"]);
 
-    // Generar hash del usuario con clave secreta
+
     $usuarioHash = hash_hmac("sha256", $usuarioIngresado, $secreto);
 
-    // Buscar el usuario por el hash
     $stmt = $conn->prepare("SELECT id, usuario, password, rol FROM usuarios WHERE usuario = ?");
     $stmt->bind_param("s", $usuarioHash);
     $stmt->execute();
@@ -24,10 +21,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         $row = $result->fetch_assoc();
 
-        // Verificar contraseña usando la frase secreta
+        // Verificación correcta: contraseña + secreto
         if (password_verify($passwordIngresado . $secreto, $row["password"])) {
 
-            // Sesiones
+            // Guardar datos en sesión
             $_SESSION["usuario_id"]     = $row["id"];
             $_SESSION["usuario_nombre"] = $usuarioIngresado; 
             $_SESSION["usuario_rol"]    = $row["rol"];
@@ -37,8 +34,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
     }
 
-    // Si falla algo:
-    header("Location: ../login.html?error=1");
+    // Si algo falla → mensaje
+    header("Location: ../login.html?error=1"); 
     exit;
 }
 ?>

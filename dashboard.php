@@ -3,21 +3,23 @@
  * SEGE-C – Panel Principal
  * Control de acceso mediante sesión.
  * Este archivo genera la vista principal según el rol del usuario autenticado.
- * Autor: Eduardo Jurado
+
  * Última actualización: 08/12/2025
  */
 
+
 session_start();
 
-// Verificación de autenticación. Si no existe sesión, se redirige al inicio de sesión.
+// Bloquea acceso sin login
 if (!isset($_SESSION["usuario_id"])) {
-    header("Location: login.html");
+    header("Location: error/403.php");
     exit;
 }
 
 $nombre = $_SESSION["usuario_nombre"];
 $rol    = $_SESSION["usuario_rol"];
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -187,7 +189,7 @@ $rol    = $_SESSION["usuario_rol"];
     <div class="row g-4">
 
         <!-- Administrar usuarios (solo roles válidos) -->
-        <?php if ($rol !== 'paciente'): ?>
+       <?php if ($rol !== 'paciente'): ?>
         <div class="col-md-4">
             <a href="modules/usuarios/administrar.php" class="text-decoration-none text-dark">
                 <div class="card-option p-4 text-center">
@@ -200,7 +202,8 @@ $rol    = $_SESSION["usuario_rol"];
                 </div>
             </a>
         </div>
-        <?php endif; ?>
+         <?php endif; ?>
+        
 
         <!-- Registrar cita -->
         <div class="col-md-4">
@@ -267,7 +270,7 @@ $rol    = $_SESSION["usuario_rol"];
 
         <footer class="mt-5">
             SEGE-C — Sistema de Gestión Clínica<br>
-            <strong>Desarrollado por Eduardo Jurado</strong>
+            
         </footer>
 
     </div>

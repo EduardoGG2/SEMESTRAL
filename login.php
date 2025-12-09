@@ -169,6 +169,23 @@
         }
     </script>
 
+    <script>
+    // Detectar error de login en la URL
+    const params = new URLSearchParams(window.location.search);
+
+    if (params.get("error") === "1") {
+        Swal.fire({
+            icon: "error",
+            title: "Credenciales incorrectas",
+            text: "Usuario o contraseña inválida.",
+            confirmButtonColor: "#d33"
+        });
+
+        // limpiar la URL para evitar la repetición del mensaje
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+</script>
+
+
 </body>
 </html>
-
